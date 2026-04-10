@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "description": "Test your local dev server on mobile over LAN",
   "bin": {
-    "lanhost": "./bin/lanhost.js"
+    "lanhost": "bin/lanhost.js"
   },
   "files": [
-    "bin/"
+    "bin/",
+    "assets/"
   ],
   "keywords": [
     "lan",
@@ -20,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MuhammadYM/lanhost.git"
+    "url": "git+https://github.com/MuhammadYM/lanhost.git"
   },
   "homepage": "https://github.com/MuhammadYM/lanhost#readme",
   "bugs": {

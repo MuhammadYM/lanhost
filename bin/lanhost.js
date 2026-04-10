@@ -213,6 +213,42 @@ function ensureGitignored() {
   }
 }
 
+// ─── Boot sequence ───────────────────────────────────────────────────────────
+
+const c = {
+  green:  s => `\x1b[32m${s}\x1b[0m`,
+  yellow: s => `\x1b[33m${s}\x1b[0m`,
+  cyan:   s => `\x1b[36m${s}\x1b[0m`,
+  dim:    s => `\x1b[2m${s}\x1b[0m`,
+  bold:   s => `\x1b[1m${s}\x1b[0m`,
+};
+
+
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+function log(tag, color, msg) {
+  console.log(`${color(`[ ${tag} ]`)} ${msg}`);
+}
+
+async function bootSequence(targetPort, lanIP, hasPassword) {
+  await sleep(2500);
+  log(' OK ', c.green, `📡  Signal acquired on port ${c.bold(targetPort)}...`);
+  await sleep(2500);
+  log(' OK ', c.green, `🛰️   Coordinates confirmed — ${c.bold(lanIP)}`);
+  await sleep(3000);
+  log('WAIT', c.yellow, '🌐  Establishing orbital relay...');
+  await sleep(2500);
+  if (hasPassword) {
+    log('AUTH', c.cyan, '🔐  Encrypting transmission channel...');
+    await sleep(2500);
+  }
+  await sleep(3000);
+  log('DONE', c.green, c.bold('🚀  lanhost is active, mobile downlink ready.'));
+  console.log(c.dim('\n————————————————————————————————————————————\n'));
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -229,13 +265,14 @@ async function main() {
   const lanIP = getLanIP();
 
   ensureGitignored();
+  await bootSequence(targetPort, lanIP, !!config.password);
 
   if (!config.password) {
-    console.warn('\n  No password set in .lanhost — running without auth.\n  Create .lanhost with { "password": "..." } to protect access.\n');
+    console.warn(`${c.yellow('[ WARN ]')} No password set — running without auth.\n         Create .lanhost with { "password": "..." } to protect access.\n`);
   }
 
   if (!isPrivateIP(lanIP)) {
-    console.warn('\n  Warning: not on a private network. Your dev server is publicly reachable.\n');
+    console.warn(`${c.yellow('[ WARN ]')} Not on a private network. Your dev server is publicly reachable.\n`);
   }
 
   // Proxy
@@ -309,7 +346,7 @@ async function main() {
     process.exit(1);
   });
 
-  server.listen(proxyPort, '0.0.0.0', () => {
+  server.listen(proxyPort, '0.0.0.0', async () => {
     const url = `http://${lanIP}:${proxyPort}`;
 
     // mDNS — optional, don't crash if unavailable
@@ -320,14 +357,15 @@ async function main() {
       console.debug('  mDNS unavailable:', err.message);
     }
 
+    await sleep(1500);
+
     // QR code
     const qrcode = require('qrcode-terminal');
 
-    console.log(`\n  lanhost\n`);
-    console.log(`  Target  : http://localhost:${targetPort}`);
-    console.log(`  Network : ${url}`);
-    if (config.name) console.log(`  mDNS    : http://${config.name}.local:${proxyPort}`);
-    console.log(`  Auth    : ${config.password ? 'password protected' : 'none'}`);
+    console.log(`  ${c.dim('Target  :')} http://localhost:${targetPort}`);
+    console.log(`  ${c.dim('Network :')} ${c.bold(url)}`);
+    if (config.name) console.log(`  ${c.dim('mDNS    :')} http://${config.name}.local:${proxyPort}`);
+    console.log(`  ${c.dim('Auth    :')} ${config.password ? c.cyan('password protected') : 'none'}`);
     console.log('\n  Scan on mobile:\n');
     qrcode.generate(url, { small: true });
     console.log(`\n  ${url}\n`);

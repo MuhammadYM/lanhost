@@ -2,6 +2,8 @@
   <img src="assets/banner.svg" alt="lanhost" width="514">
 </p>
 
+---
+
 Proxy your local dev server over LAN so you can test it on mobile — with an optional password and QR code.
 
 ## Install
@@ -12,15 +14,19 @@ npm install -g lanhost
 
 ## Usage
 
+Start your dev server as normal, then in a separate terminal run:
+
 ```sh
 lanhost <port>
 ```
+
+For example:
 
 ```sh
 lanhost 3000
 ```
 
-Starts a proxy on target `<port> + 1` bound to `0.0.0.0`, prints the LAN URL and a QR code to scan on mobile.
+lanhost starts a proxy on `port + 1`.
 
 That's it — no config file required.
 

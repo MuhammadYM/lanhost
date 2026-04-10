@@ -1,0 +1,37 @@
+{
+  "name": "lanhost",
+  "version": "0.1.0",
+  "description": "Test your local dev server on mobile over LAN",
+  "bin": {
+    "lanhost": "./bin/lanhost.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "keywords": [
+    "lan",
+    "proxy",
+    "mobile",
+    "dev",
+    "localhost",
+    "qrcode"
+  ],
+  "author": "MuhammadYM",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuhammadYM/lanhost.git"
+  },
+  "homepage": "https://github.com/MuhammadYM/lanhost#readme",
+  "bugs": {
+    "url": "https://github.com/MuhammadYM/lanhost/issues"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "bonjour-service": "^1.2.1",
+    "http-proxy": "^1.18.1",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
